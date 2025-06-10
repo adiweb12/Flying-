@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-adsense-account" content="ca-pub-4815041637550064">
+    <title>Flappy Bird</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* General body styling */
+        body {
+            margin: 0;
+            overflow: hidden;
+            /* Prevent scrolling */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            /* Full viewport height */
+            background: linear-gradient(to bottom, #87CEEB, #A0E0F0);
+            /* Sky blue background */
+            font-family: 'Inter', sans-serif;
+            /* Use Inter font */
+            color: #333;
+            flex-direction: column;
+            padding: 20px;
+            /* Add some padding for smaller screens */
+            box-sizing: border-box;
+            /* Include padding in element's total width and height */
+        }
+
+        /* Game container for centering and responsiveness */
+        .game-container {
+            position: relative;
+            background-color: #fff;
+            /* White background for the canvas area */
+            border-radius: 15px;
+            /* Rounded corners */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            /* Soft shadow */
+            overflow: hidden;
+            /* Hide anything outside the container */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            /* Max width */
+            max-width: 500px;
+            /* Maximum width for desktop */
+            height: 80vh;
+            /* Take up 80% of viewport height */
+            max-height: 700px;
+            /* Max height for larger screens */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        div {
+            background-image: url("20250607_105046.jpg");
+            background-size: cover;
+            /* Or contain, etc. */
+            background-attachment: fixed;
+            background-position: center;
+            /* Or any desired position */
+            background-repeat: no-repeat;
+        }
+
+        /* Canvas styling */
+        canvas {
+            display: block;
+            background-color: #70c5ce;
+            /* Game sky color */
+            border-radius: 10px;
+            /* Slightly rounded corners for the canvas */
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+            /* Inner shadow */
+            width: 100%;
+            /* Make canvas responsive to its container */
+            height: calc(100% - 70px);
+            /* Adjust height to leave space for messages/buttons */
+            max-width: 480px;
+            /* Max width for canvas */
+            max-height: 600px;
+            /* Max height for canvas */
+            aspect-ratio: 1 / 1.25;
+            /* Maintain a good aspect ratio for the game */
+            margin-bottom: 20px;
+            border: 2px solid #555;
+            box-sizing: border-box;
+        }
+
+        adhitext {
+            color: #FDFFF8;
+            text-align: center;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        /* Message box for start/game over screens */
+        .message-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px 15px;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            border: 2px solid #555;
+            z-index: 1000;
+            width: 80%;
+            max-width: 350px;
+            box-sizing: border-box;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .message-box h2 {
+            margin-top: 0;
+            color: #333;
+            font-size: 2.2em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .message-box p {
+            font-size: 1.1em;
+            margin-bottom: 25px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .message-box button {
+            background: linear-gradient(to right, #4CAF50, #66BB6A);
+            /* Green gradient */
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+        }
+
+        .message-box button:hover {
+            background: linear-gradient(to right, #66BB6A, #81C784);
+            /* Lighter green on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Fade in animation for message box */
+@keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        /* Styling for the instructions text */
+        .instructions {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        /* Media queries for responsiveness */
+@media (max-width: 600px) {
+            .game-container {
+                height: 90vh;
+                /* More height on smaller screens */
+                padding: 15px;
+            }
+            canvas {
+                height: calc(100% - 60px);
+                max-width: none;
+                /* Let width expand more */
+                max-height: none;
+                /* Let height expand more */
+                aspect-ratio: auto;
+                /* Allow flexible aspect ratio on very small screens */
+            }
+            .message-box {
+                width: 90%;
+                padding: 20px;
+            }
+            .message-box h2 {
+                font-size: 1.8em;
+            }
+            .message-box p {
+                font-size: 1em;
+            }
+            .message-box button {
+                padding: 10px 20px;
+                font-size: 1.1em;
+            }
+            .instructions {
+                font-size: 0.8em;
+                margin-top: 10px;
+            }
+
+            et {
+                color: #00789A;
+                font-family: ' Times New Roman';
+            }
+        }
+    </style>
+    <canvas></canvas>
+    <div class="message-box">
+        <adhitext>
+            WELCOME TO ADI GAMES
+
+            <p>
+                <et>  You are here you play with me , Aren't you?.This web is only for fun purpose .It contain popular games small html version</et>
+
+            </p>
+
+            <button onclick="location.href='FLAPPY_BIRD_SIMPLE_ADI.html'">
+                Simple mode
+            </button>
+
+            <body>
+                                <p>
+                ------------
+                </p>
+            </body>
+
+            <button onclick="location.href='FLAPPY_BIRD_MEDIUM_ADI.html '">
+                Medium mode
+            </button>
+
+            <body>
+                <p>
+                ------------
+                </p>
+            </body>
+
+            <button onclick="location.href='FLAPPY_BIRD_HARD_ADI.html '">
+                HARD mode
+            </button>
+        </adhitext>
+    </div>
+</canvas>
+</html>
